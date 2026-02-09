@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-IssueTrackerApplication<issue-tracker>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.issue_tracker.IssueTrackerApplication",
+            "projectName": "issue-tracker",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

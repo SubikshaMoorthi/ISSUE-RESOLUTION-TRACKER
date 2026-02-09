@@ -1,0 +1,4 @@
+spring.datasource.url=jdbc:mysql://localhost:3306/issue_tracker_db
+spring.datasource.username=root
+spring.datasource.password=
+jwt.secret=

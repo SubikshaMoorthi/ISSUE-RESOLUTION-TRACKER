@@ -1,33 +1,30 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+### Maven Specific ###
+.mvn/
+mvnw
+mvnw.cmd
+# Ignore the wrapper jar specifically if not already covered
+**/src/main/**/target/
+**/src/test/**/target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+### Spring Boot & Logs ###
+# This ensures that even if you use different log naming conventions, they stay out of Git
+*.log
+logs/
+temp/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+### Environment & Secrets ###
+# Already covered in your list, but vital to keep exactly like this:
+src/main/resources/application.properties
+src/main/resources/application.yml
+.env
+.env.local
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
+### OS & IDE specific extras ###
+# For macOS users who might contribute later
+.DS_Store
+.AppleDouble
+.LSOverride
+# For Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
