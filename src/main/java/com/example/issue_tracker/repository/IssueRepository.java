@@ -18,10 +18,10 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findByAssignedTo(User user);
 
     // Core Logic for Step 3: Count only active (non-resolved) issues
-   // Fixes "cannot find symbol" in IssueService
     int countByAssignedToAndStatusNot(User user, Status status);
 
     // Step 7: For Admin Analytics
-    @Query("SELECT i.assignedTo.fullName, COUNT(i) FROM Issue i WHERE i.status != 'RESOLVED' GROUP BY i.assignedTo.fullName")
+    // FIX: Both SELECT and GROUP BY must use '.name'
+    @Query("SELECT i.assignedTo.name, COUNT(i) FROM Issue i WHERE i.status != 'RESOLVED' GROUP BY i.assignedTo.name")
     List<Object[]> getResolverWorkloadStats();
 }
