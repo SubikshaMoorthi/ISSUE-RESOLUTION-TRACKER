@@ -33,20 +33,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // This is usually the cause of 403 on POST
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .csrf(csrf -> csrf.disable()) // Essential for stateless REST APIs
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
             .authorizeHttpRequests(auth -> auth
-                // Use permitAll() for anything under /api/auth/
-                .requestMatchers("/api/auth/**").permitAll() 
+                // Public: Only login and forgot-password should be open
+                .requestMatchers("/api/auth/login", "/api/auth/forgot-password").permitAll() 
+                
+                // ADMIN Only: User and Resolver creation/management
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/issues/**").hasAnyRole("USER", "ADMIN", "RESOLVER")
+                
+                // RESOLVER/ADMIN: Specific issue resolution actions
+                .requestMatchers("/api/issues/resolve/**").hasAnyRole("ADMIN", "RESOLVER")
+                
+                // GENERAL: Any other authenticated user can access basic issue features
                 .anyRequest().authenticated()
             );
-    
-        // Add your JWT filter
+        
+        // Ensure JWT filter is processed first
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    
+        
         return http.build();
-}
-
+    }
 }
