@@ -1,6 +1,8 @@
 package com.example.issue_tracker.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,16 +11,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.SecurityFilterChain; // Added for CORS
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter; // Added for CORS
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.issue_tracker.security.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,25 +40,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Essential for stateless REST APIs
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // FIX: Apply CORS
+            .csrf(csrf -> csrf.disable()) 
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
             .authorizeHttpRequests(auth -> auth
-                // Public: Only login and forgot-password should be open
-                .requestMatchers("/api/auth/login", "/api/auth/forgot-password").permitAll() 
-                
-                // ADMIN Only: User and Resolver creation/management
+                .requestMatchers("/api/auth/**").permitAll() // Allow all auth endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                
-                // RESOLVER/ADMIN: Specific issue resolution actions
                 .requestMatchers("/api/issues/resolve/**").hasAnyRole("ADMIN", "RESOLVER")
-                
-                // GENERAL: Any other authenticated user can access basic issue features
                 .anyRequest().authenticated()
             );
         
-        // Ensure JWT filter is processed first
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
+    }
+
+    // This Bean handles the handshake between port 5173 and 8080
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        configuration.setAllowCredentials(true);
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
