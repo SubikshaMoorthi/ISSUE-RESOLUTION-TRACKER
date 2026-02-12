@@ -2,6 +2,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 
+// Import all Dashboard Components
+import UserDashboard from './pages/UserDashboard';
+import AdminDashboard from './pages/AdminDashboard'; 
+import ResolverDashboard from './pages/ResolverDashboard';
+
 function App() {
   return (
     <Router>
@@ -9,24 +14,24 @@ function App() {
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
 
-        {/* Admin Only */}
+        {/* Admin Only - Now using AdminDashboard component */}
         <Route path="/admin-dashboard" element={
           <ProtectedRoute allowedRoles={['ADMIN']}>
-            <div className="p-10">Welcome Admin - Analytics and User Management</div>
+            <AdminDashboard />
           </ProtectedRoute>
         } />
 
-        {/* Resolver Only */}
+        {/* Resolver Only - Now using ResolverDashboard component */}
         <Route path="/resolver-dashboard" element={
           <ProtectedRoute allowedRoles={['RESOLVER']}>
-            <div className="p-10">Welcome Resolver - Ticket Queue</div>
+            <ResolverDashboard />
           </ProtectedRoute>
         } />
 
-        {/* User Only */}
+        {/* User Only - Supports both USER and STUDENT roles */}
         <Route path="/user-dashboard" element={
-          <ProtectedRoute allowedRoles={['USER']}>
-            <div className="p-10">Welcome User - Create and View Issues</div>
+          <ProtectedRoute allowedRoles={['USER', 'STUDENT']}> 
+            <UserDashboard /> 
           </ProtectedRoute>
         } />
 

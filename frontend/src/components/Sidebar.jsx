@@ -1,28 +1,43 @@
 import React from 'react';
-import { LayoutDashboard, PlusCircle, LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ setView }) => {
-  const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.clear();
-    navigate('/login');
+    localStorage.clear(); // Clears JWT and Role to secure the app
+    window.location.href = '/login';
   };
 
   return (
-    <div className="h-screen w-64 bg-slate-900 text-white flex flex-col p-4 shadow-xl">
-      <h1 className="text-xl font-bold mb-10 border-b border-slate-700 pb-4">Issue Tracker</h1>
-      <nav className="space-y-4 flex-grow">
-        <button onClick={() => setView('list')} className="flex items-center gap-3 hover:bg-slate-800 w-full p-2 rounded">
-          <LayoutDashboard size={20} /> My Issues
+    <div className="w-64 bg-indigo-900 text-white flex flex-col shadow-xl">
+      <div className="p-6 text-2xl font-extrabold tracking-tight border-b border-indigo-800">
+        ISSUE TRACKER
+      </div>
+      
+      <nav className="flex-1 p-4 space-y-2 mt-4">
+        {/* Updated from 'Create New Ticket' to 'Report New Issue' */}
+        <button 
+          onClick={() => setView('create')} 
+          className="w-full text-left p-3 hover:bg-indigo-800 rounded-lg transition-colors font-medium"
+        >
+          Report New Issue
         </button>
-        <button onClick={() => setView('create')} className="flex items-center gap-3 hover:bg-slate-800 w-full p-2 rounded">
-          <PlusCircle size={20} /> Create Issue
+
+        {/* Updated from 'View All Tickets' to 'View All Issues' */}
+        <button 
+          onClick={() => setView('list')} 
+          className="w-full text-left p-3 hover:bg-indigo-800 rounded-lg transition-colors font-medium"
+        >
+          View All Issues
         </button>
       </nav>
-      <button onClick={handleLogout} className="flex items-center gap-3 text-red-400 hover:text-red-300 p-2 mt-auto">
-        <LogOut size={20} /> Logout
-      </button>
+
+      <div className="p-4 border-t border-indigo-800">
+        <button 
+          onClick={handleLogout} 
+          className="w-full bg-red-500 hover:bg-red-600 p-3 rounded-lg transition font-bold"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
