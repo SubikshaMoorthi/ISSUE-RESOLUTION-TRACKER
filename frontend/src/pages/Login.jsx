@@ -19,9 +19,9 @@ const Login = () => {
             login(res.data); // This saves token and user info to Context
 
             // Redirect based on Role
-            if (res.data.role === 'ROLE_ADMIN') navigate('/admin-dashboard');
+            if (res.data.role === 'ROLE_ADMIN') navigate('/admin/performance');
             else if (res.data.role === 'ROLE_RESOLVER') navigate('/resolver-dashboard');
-            else navigate('/student-dashboard');
+            else navigate('/user-dashboard');
             
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed. Check credentials.');
