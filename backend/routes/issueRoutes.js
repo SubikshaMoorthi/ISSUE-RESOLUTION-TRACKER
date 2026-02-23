@@ -7,6 +7,7 @@ const allowRoles = require('../middleware/roleMiddleware');
 router.post('/raise', protect, allowRoles('ROLE_USER'), issueController.raiseIssue);
 router.get('/admin/all', protect, allowRoles('ROLE_ADMIN'), issueController.getAllIssues);
 router.get('/admin/stats', protect, allowRoles('ROLE_ADMIN'), issueController.getStats);
+router.get('/admin/departments', protect, allowRoles('ROLE_ADMIN'), issueController.getDepartmentStats);
 
 // CRITICAL: This route fixes the blank Feedback page
 router.get('/admin/feedbacks', protect, allowRoles('ROLE_ADMIN'), issueController.getFeedbacks);

@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const SUPPORTED_DEPARTMENTS = ['IT', 'MAINTENANCE', 'HOSTEL', 'ACCOUNTS', 'LIBRARY', 'SPORTS'];
 
 // 1. Raise Issue with AUTO-ASSIGNMENT & LOAD BALANCING
 exports.raiseIssue = async (req, res) => {
@@ -192,7 +193,63 @@ exports.getStats = async (req, res) => {
     }
 };
 
-// 8. Get Resolver Feedbacks with Resolver Info
+// 8. Get Department Cards Data (Admin)
+exports.getDepartmentStats = async (req, res) => {
+    try {
+        const placeholders = SUPPORTED_DEPARTMENTS.map(() => '?').join(', ');
+
+        const [membersRows] = await db.execute(
+            `SELECT department, COUNT(*) AS members
+             FROM users
+             WHERE role = 'ROLE_RESOLVER' AND department IN (${placeholders})
+             GROUP BY department`,
+            SUPPORTED_DEPARTMENTS
+        );
+
+        const [performanceRows] = await db.execute(
+            `SELECT 
+                u.department,
+                COUNT(i.id) AS solved_issues,
+                AVG(i.rating) AS avg_rating
+             FROM users u
+             LEFT JOIN issues i
+                ON i.resolver_id = u.id
+               AND UPPER(i.status) = 'RESOLVED'
+             WHERE u.role = 'ROLE_RESOLVER' AND u.department IN (${placeholders})
+             GROUP BY u.department`,
+            SUPPORTED_DEPARTMENTS
+        );
+
+        const membersByDept = new Map(
+            membersRows.map((row) => [String(row.department).toUpperCase(), Number(row.members) || 0])
+        );
+        const perfByDept = new Map(
+            performanceRows.map((row) => [
+                String(row.department).toUpperCase(),
+                {
+                    solved_issues: Number(row.solved_issues) || 0,
+                    avg_rating: row.avg_rating === null ? null : Number(row.avg_rating)
+                }
+            ])
+        );
+
+        const departments = SUPPORTED_DEPARTMENTS.map((department) => {
+            const perf = perfByDept.get(department) || { solved_issues: 0, avg_rating: null };
+            return {
+                department,
+                members: membersByDept.get(department) || 0,
+                solvedIssues: perf.solved_issues,
+                avgRating: perf.avg_rating
+            };
+        });
+
+        res.json({ departments });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// 9. Get Resolver Feedbacks with Resolver Info
 exports.getFeedbacks = async (req, res) => {
     try {
         const [feedbacks] = await db.execute(`
@@ -216,7 +273,7 @@ exports.getFeedbacks = async (req, res) => {
     }
 };
 
-// 9. Submit Feedback & Rating (User Action)
+// 10. Submit Feedback & Rating (User Action)
 exports.submitFeedback = async (req, res) => {
     const { feedback_text, feedback_type, rating } = req.body;
     try {
@@ -269,7 +326,7 @@ exports.submitFeedback = async (req, res) => {
     }
 };
 
-// 10. Get Resolved Issues for a Resolver
+// 11. Get Resolved Issues for a Resolver
 exports.getResolvedIssues = async (req, res) => {
     try {
         const requestedResolverId = Number(req.params.resolverId);
@@ -291,7 +348,7 @@ exports.getResolvedIssues = async (req, res) => {
     }
 };
 
-// 11. Get Resolver Stats (Assigned, Resolved, Pending for a specific resolver)
+// 12. Get Resolver Stats (Assigned, Resolved, Pending for a specific resolver)
 exports.getResolverStats = async (req, res) => {
     try {
         const resolverId = req.params.resolverId;
@@ -366,7 +423,7 @@ exports.getResolverStats = async (req, res) => {
     }
 };
 
-// 12. Get Feedbacks for a Specific Resolver
+// 13. Get Feedbacks for a Specific Resolver
 exports.getResolverFeedbacks = async (req, res) => {
     try {
         const requestedResolverId = Number(req.params.resolverId);
