@@ -5,6 +5,7 @@ import {
     LayoutDashboard, 
     UserPlus, 
     BarChart3, 
+    Building2,
     PlusCircle, 
     ListTodo, 
     LogOut, 
@@ -31,6 +32,7 @@ const Sidebar = () => {
             { name: "Add Users", path: "/admin/add-user", icon: <UserPlus size={20} /> },
             { name: "Users Info", path: "/admin/users", icon: <Users size={20} /> },
             { name: "Issue Log", path: "/admin/all-issues", icon: <ListTodo size={20} /> },
+            { name: "Departments", path: "/admin/departments", icon: <Building2 size={20} /> },
             { name: "Feedbacks", path: "/admin/feedbacks", icon: <MessageSquareQuote size={20} /> },
         ],
         ROLE_RESOLVER: [

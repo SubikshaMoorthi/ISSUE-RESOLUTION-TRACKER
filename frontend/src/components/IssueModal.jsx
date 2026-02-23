@@ -2,7 +2,7 @@ import { X, Calendar, User, Tag, MessageSquare } from 'lucide-react';
 
 const IssueModal = ({ issue, onClose, onMarkResolved }) => {
     if (!issue) return null;
-    const isResolved = String(issue.status || '').toUpperCase() === 'RESOLVED';
+    const isResolved = String(issue.status || '').trim().toUpperCase() === 'RESOLVED';
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
