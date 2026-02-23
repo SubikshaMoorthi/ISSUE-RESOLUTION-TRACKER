@@ -29,10 +29,10 @@ const AdminPerformance = () => {
             const safeDeptStats = Array.isArray(deptStats) ? deptStats : [];
             const safeRatingsData = Array.isArray(ratingsData) ? ratingsData : [];
 
-            // Parse status stats
             const totalCount = safeStatusStats.reduce((acc, curr) => acc + curr.count, 0);
-            const resolvedCount = safeStatusStats.find(d => d.status === 'RESOLVED')?.count || 0;
-            const pendingCount = safeStatusStats.filter(d => d.status === 'OPEN' || d.status === 'IN_PROGRESS')
+            const resolvedCount = safeStatusStats.find((d) => d.status === 'RESOLVED')?.count || 0;
+            const pendingCount = safeStatusStats
+                .filter((d) => d.status === 'OPEN' || d.status === 'IN_PROGRESS')
                 .reduce((acc, curr) => acc + curr.count, 0);
 
             setStats({
@@ -42,17 +42,15 @@ const AdminPerformance = () => {
                 totalUsers: totalUsers || 0
             });
 
-            // Department data for pie chart
             setDeptData(safeDeptStats.map((d, idx) => ({
                 name: d.label,
                 value: d.count,
                 color: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'][idx % 6]
             })));
 
-            // Resolver ratings for donut chart
             setResolverRatings(safeRatingsData);
         } catch (err) {
-            console.error("Error fetching stats", err);
+            console.error('Error fetching stats', err);
         } finally {
             setLoading(false);
         }
@@ -68,7 +66,6 @@ const AdminPerformance = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            {/* Header */}
             <div style={{ marginBottom: '40px' }}>
                 <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#1e293b', margin: 0 }}>
                     Dashboard
@@ -78,7 +75,6 @@ const AdminPerformance = () => {
                 </p>
             </div>
 
-            {/* Statistics Cards */}
             <div style={styles.statsContainer}>
                 <StatCard
                     icon={<TrendingUp size={24} color="#2563eb" />}
@@ -106,9 +102,7 @@ const AdminPerformance = () => {
                 />
             </div>
 
-            {/* Charts Section */}
             <div style={styles.chartsContainer}>
-                {/* Department Pie Chart */}
                 <div style={styles.chartCard}>
                     <h3 style={styles.chartTitle}>Department-wise Issues</h3>
                     {deptData.length > 0 ? (
@@ -136,7 +130,6 @@ const AdminPerformance = () => {
                     )}
                 </div>
 
-                {/* Resolver Ratings Donut Chart */}
                 <div style={styles.chartCard}>
                     <h3 style={styles.chartTitle}>Resolver Ratings Distribution</h3>
                     {resolverRatings.length > 0 ? (

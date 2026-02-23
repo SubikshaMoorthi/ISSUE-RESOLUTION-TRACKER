@@ -4,13 +4,10 @@ import { MessageSquareQuote } from 'lucide-react';
 import '../App.css';
 
 const SENTIMENT_STYLES = {
-    GOOD: { label: 'Good', color: '#16a34a', bg: '#ecfdf5' },
-    NEUTRAL: { label: 'Neutral', color: '#f59e0b', bg: '#fffbeb' },
-    BAD: { label: 'Bad', color: '#ef4444', bg: '#fef2f2' }
+    GOOD: { label: 'Good', color: '#16a34a', bg: '#ecfdf5', noteBg: '#dcfce7' },
+    NEUTRAL: { label: 'Neutral', color: '#f59e0b', bg: '#fffbeb', noteBg: '#fef3c7' },
+    BAD: { label: 'Bad', color: '#ef4444', bg: '#fef2f2', noteBg: '#fee2e2' }
 };
-
-// Change this value to your preferred note background color.
-const CUSTOM_FEEDBACK_BG = '#fff7cc';
 
 const shuffle = (items) => {
     const arr = [...items];
@@ -48,8 +45,7 @@ const decorateNotes = (items) =>
     items.map((item) => ({
         ...item,
         _tilt: (Math.random() * 8) - 4,
-        _offset: Math.floor(Math.random() * 20),
-        _bg: CUSTOM_FEEDBACK_BG
+        _offset: Math.floor(Math.random() * 20)
     }));
 
 const AdminFeedbacks = () => {
@@ -106,7 +102,7 @@ const AdminFeedbacks = () => {
                                 style={{
                                     ...styles.note,
                                     borderLeftColor: sentiment.color,
-                                    backgroundColor: feedback._bg,
+                                    backgroundColor: sentiment.noteBg,
                                     transform: `rotate(${feedback._tilt || 0}deg)`,
                                     marginTop: `${feedback._offset || 0}px`
                                 }}
