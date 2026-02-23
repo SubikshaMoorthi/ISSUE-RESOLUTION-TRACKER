@@ -9,7 +9,7 @@ const UserAllIssues = () => {
     const [selectedIssue, setSelectedIssue] = useState(null);
     const [loading, setLoading] = useState(true);
     const [feedback, setFeedback] = useState({
-        satisfaction: 'YES',
+        sentiment: 'POSITIVE',
         rating: 5,
         comment: ''
     });
@@ -49,7 +49,7 @@ const UserAllIssues = () => {
     const handleOpenIssue = (issue) => {
         setSelectedIssue(issue);
         setFeedback({
-            satisfaction: 'YES',
+            sentiment: issue.feedback_type || 'POSITIVE',
             rating: 5,
             comment: issue.feedback_text || ''
         });
@@ -59,7 +59,7 @@ const UserAllIssues = () => {
         try {
             await API.put(`/issues/${issueId}/feedback`, {
                 feedback_text: feedback.comment,
-                feedback_type: feedback.satisfaction === 'YES' ? 'POSITIVE' : 'NEGATIVE',
+                feedback_type: feedback.sentiment,
                 rating: feedback.rating
             });
             await fetchIssues();
@@ -98,6 +98,7 @@ const UserAllIssues = () => {
                             <th style={styles.th}>Title</th>
                             <th style={styles.th}>Status</th>
                             <th style={styles.th}>Date Created</th>
+                            <th style={styles.th}>Assigned To</th>
                             {isAdminView && <th style={styles.th}>Created By</th>}
                         </tr>
                     </thead>
@@ -137,6 +138,7 @@ const UserAllIssues = () => {
                                             day: '2-digit'
                                         })}
                                     </td>
+                                    <td style={styles.td}>{issue.resolver_name || 'Unassigned'}</td>
                                     {isAdminView && <td style={styles.td}>{issue.reporter_name || 'Unknown'}</td>}
                                 </tr>
                             );
@@ -196,15 +198,15 @@ const UserAllIssues = () => {
                                     <h3 style={styles.feedbackTitle}>Feedback</h3>
 
                                     <div style={{ marginBottom: '12px' }}>
-                                        <p style={styles.label}>Satisfied</p>
+                                        <p style={styles.label}>Feedback Type</p>
                                         <div style={styles.toggleWrap}>
-                                            {['YES', 'NO'].map((value) => (
+                                            {['POSITIVE', 'NEUTRAL', 'NEGATIVE'].map((value) => (
                                                 <button
                                                     key={value}
-                                                    onClick={() => setFeedback((prev) => ({ ...prev, satisfaction: value }))}
+                                                    onClick={() => setFeedback((prev) => ({ ...prev, sentiment: value }))}
                                                     style={{
                                                         ...styles.toggleBtn,
-                                                        ...(feedback.satisfaction === value ? styles.toggleBtnActive : {})
+                                                        ...(feedback.sentiment === value ? styles.toggleBtnActive : {})
                                                     }}
                                                 >
                                                     {value}

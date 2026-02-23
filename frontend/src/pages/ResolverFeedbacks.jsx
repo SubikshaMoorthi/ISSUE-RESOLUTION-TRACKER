@@ -36,10 +36,12 @@ const ResolverFeedbacks = () => {
         });
 
     const getFilteredFeedbacks = () => {
+        const getType = (f) => String(f.feedback_type || '').trim().toUpperCase();
+
         if (filter === 'ALL') return feedbacks;
-        if (filter === 'POSITIVE') return feedbacks.filter(f => f.rating >= 4);
-        if (filter === 'NEUTRAL') return feedbacks.filter(f => f.rating >= 2.5 && f.rating < 4);
-        if (filter === 'NEGATIVE') return feedbacks.filter(f => f.rating < 2.5);
+        if (filter === 'POSITIVE') return feedbacks.filter((f) => getType(f) === 'POSITIVE' || (getType(f) === '' && f.rating >= 4));
+        if (filter === 'NEUTRAL') return feedbacks.filter((f) => getType(f) === 'NEUTRAL' || (getType(f) === '' && f.rating >= 2.5 && f.rating < 4));
+        if (filter === 'NEGATIVE') return feedbacks.filter((f) => getType(f) === 'NEGATIVE' || (getType(f) === '' && f.rating < 2.5));
         return feedbacks;
     };
 
@@ -60,11 +62,12 @@ const ResolverFeedbacks = () => {
     }
 
     const filteredFeedbacks = getFilteredFeedbacks();
+    const getType = (f) => String(f.feedback_type || '').trim().toUpperCase();
     const stats = {
         total: feedbacks.length,
-        positive: feedbacks.filter(f => f.rating >= 4).length,
-        neutral: feedbacks.filter(f => f.rating >= 2.5 && f.rating < 4).length,
-        negative: feedbacks.filter(f => f.rating < 2.5).length
+        positive: feedbacks.filter((f) => getType(f) === 'POSITIVE' || (getType(f) === '' && f.rating >= 4)).length,
+        neutral: feedbacks.filter((f) => getType(f) === 'NEUTRAL' || (getType(f) === '' && f.rating >= 2.5 && f.rating < 4)).length,
+        negative: feedbacks.filter((f) => getType(f) === 'NEGATIVE' || (getType(f) === '' && f.rating < 2.5)).length
     };
 
     return (

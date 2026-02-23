@@ -9,7 +9,7 @@ const RaiseIssue = () => {
     const [message, setMessage] = useState('');
     const [isHovering, setIsHovering] = useState(false);
 
-    const departments = ['IT', 'MAINTENANCE', 'HOSTEL', 'ACCOUNTS'];
+    const departments = ['IT', 'MAINTENANCE', 'HOSTEL', 'ACCOUNTS', 'LIBRARY', 'SPORTS'];
 
     const handleSubmit = async (e) => {
         e.preventDefault();

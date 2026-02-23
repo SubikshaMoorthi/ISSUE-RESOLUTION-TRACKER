@@ -51,7 +51,7 @@ const ResolverAssignedIssues = () => {
             await fetchAssignedIssues();
             setSelectedIssue(null);
         } catch (err) {
-            alert('Failed to mark issue as resolved');
+            alert('Failed to mark issue as resolved: ' + (err?.response?.data?.message || err?.response?.data?.error || err.message));
             console.error(err);
         }
     };

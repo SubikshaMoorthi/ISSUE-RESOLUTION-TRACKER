@@ -9,7 +9,7 @@ const UserDashboard = () => {
     const [selectedIssue, setSelectedIssue] = useState(null);
     const [submittingFeedback, setSubmittingFeedback] = useState(false);
     const [feedback, setFeedback] = useState({
-        satisfaction: 'YES',
+        sentiment: 'POSITIVE',
         rating: 5,
         comment: ''
     });
@@ -37,7 +37,7 @@ const UserDashboard = () => {
     const openFeedbackModal = (issue) => {
         setSelectedIssue(issue);
         setFeedback({
-            satisfaction: 'YES',
+            sentiment: 'POSITIVE',
             rating: 5,
             comment: ''
         });
@@ -51,7 +51,7 @@ const UserDashboard = () => {
             setSubmittingFeedback(true);
             await API.put(`/issues/${selectedIssue.id}/feedback`, {
                 feedback_text: feedback.comment,
-                feedback_type: feedback.satisfaction === 'YES' ? 'POSITIVE' : 'NEGATIVE',
+                feedback_type: feedback.sentiment,
                 rating: feedback.rating
             });
             await fetchIssues();
@@ -202,15 +202,15 @@ const UserDashboard = () => {
                             <p style={styles.modalIssueMeta}>Issue #{selectedIssue.id}: {selectedIssue.title}</p>
 
                             <div style={{ marginBottom: '12px' }}>
-                                <p style={styles.label}>Satisfied</p>
+                                <p style={styles.label}>Feedback Type</p>
                                 <div style={styles.toggleWrap}>
-                                    {['YES', 'NO'].map((value) => (
+                                    {['POSITIVE', 'NEUTRAL', 'NEGATIVE'].map((value) => (
                                         <button
                                             key={value}
-                                            onClick={() => setFeedback((prev) => ({ ...prev, satisfaction: value }))}
+                                            onClick={() => setFeedback((prev) => ({ ...prev, sentiment: value }))}
                                             style={{
                                                 ...styles.toggleBtn,
-                                                ...(feedback.satisfaction === value ? styles.toggleBtnActive : {})
+                                                ...(feedback.sentiment === value ? styles.toggleBtnActive : {})
                                             }}
                                         >
                                             {value}
