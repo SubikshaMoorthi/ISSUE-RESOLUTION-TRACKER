@@ -1,0 +1,225 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+/* Layout Helpers */
+.main-content {
+  transition: all 0.3s ease;
+}
+
+/* Table Styling (Used in Admin & User All Issues) */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  margin-top: 20px;
+}
+
+thead {
+  background-color: #f1f5f9;
+}
+
+th {
+  padding: 16px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+td {
+  padding: 16px;
+  font-size: 15px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status Badges */
+.status-pill {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-block;
+  text-align: center;
+  min-width: 100px;
+}
+
+.status-open { background-color: #fef3c7; color: #92400e; }
+.status-in-progress { background-color: #e0f2fe; color: #0369a1; }
+.status-resolved { background-color: #dcfce7; color: #166534; }
+
+/* Input & Select Styling */
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Dashboard Cards (Commonly used across roles) */
+.stat-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Container */
+.form-card {
+  background: white;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Action Buttons */
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+/* --- Admin Dashboard Specifics --- */
+
+/* Curved Metric Boxes (Total, Solved, Pending) */
+.curved-card {
+  flex: 1;
+  padding: 35px 20px;
+  border-radius: 40px; /* High radius for the requested "curved" look */
+  color: white;
+  text-align: center;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.curved-card:hover {
+  transform: scale(1.02);
+}
+
+.card-label {
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 10px;
+}
+
+.card-value {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+/* Charts Layout */
+.chart-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.chart-container {
+  background-color: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 10px;
+}
+
+/* --- Sticky Note Feedbacks (Post-it Style) --- */
+
+.sticky-note {
+  width: 240px;
+  min-height: 240px;
+  padding: 25px;
+  box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.2s ease;
+  cursor: default;
+  border-radius: 2px; /* Post-it notes are usually square with sharp/slightly soft edges */
+}
+
+/* Random rotation for authentic board look */
+.sticky-note:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.sticky-note:nth-child(odd) {
+  transform: rotate(-2deg);
+}
+
+.sticky-note:hover {
+  transform: scale(1.05) rotate(0deg);
+  z-index: 10;
+}
+
+.note-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.note-body {
+  font-size: 16px;
+  line-height: 1.4;
+  color: #334155;
+  font-style: italic;
+  flex-grow: 1;
+}
+
+.note-footer {
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2563eb; /* Matches your brand blue */
+  text-align: right;
+}
