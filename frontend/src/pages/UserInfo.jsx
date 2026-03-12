@@ -73,7 +73,7 @@ const UserInfo = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', gap: '16px', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Users size={28} color="#2563eb" />
                     <h2 style={{ marginLeft: '10px', fontSize: '24px', fontWeight: '700', color: '#1e293b', margin: 0 }}>
@@ -81,7 +81,7 @@ const UserInfo = () => {
                     </h2>
                 </div>
 
-                <div style={{ display: 'flex', gap: '15px' }}>
+                <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', width: 'min(520px, 100%)' }}>
                     <div style={styles.searchBox}>
                         <Search size={18} color="#94a3b8" />
                         <input
@@ -190,7 +190,8 @@ const styles = {
         backgroundColor: '#f8fafc',
         border: '1px solid #e2e8f0',
         borderRadius: '8px',
-        minWidth: '200px'
+        minWidth: '180px',
+        flex: '1 1 220px'
     },
     searchInner: {
         backgroundColor: 'transparent',

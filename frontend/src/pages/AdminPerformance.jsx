@@ -10,9 +10,17 @@ const AdminPerformance = () => {
     const [deptData, setDeptData] = useState([]);
     const [resolverRatings, setResolverRatings] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         fetchPerformanceData();
+    }, []);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 640);
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     const fetchPerformanceData = async () => {
@@ -106,25 +114,32 @@ const AdminPerformance = () => {
                 <div style={styles.chartCard}>
                     <h3 style={styles.chartTitle}>Department-wise Issues</h3>
                     {deptData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={deptData}
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={100}
-                                    label={({ name, value }) => `${name}: ${value}`}
-                                    labelLine={false}
-                                    dataKey="value"
-                                >
-                                    {deptData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                                <Tooltip formatter={(value) => `${value} issues`} />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
+                        <div className="chart-resize" style={{ height: 300 }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={deptData}
+                                        cx="50%"
+                                        cy="50%"
+                                        outerRadius={isMobile ? 70 : 100}
+                                        label={isMobile ? false : ({ name, value }) => `${name}: ${value}`}
+                                        labelLine={false}
+                                        dataKey="value"
+                                    >
+                                        {deptData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip formatter={(value) => `${value} issues`} />
+                                    <Legend
+                                        layout="horizontal"
+                                        verticalAlign="bottom"
+                                        align="center"
+                                        wrapperStyle={{ fontSize: isMobile ? 11 : 12 }}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
                     ) : (
                         <p style={{ textAlign: 'center', color: '#94a3b8' }}>No data available</p>
                     )}
@@ -133,30 +148,37 @@ const AdminPerformance = () => {
                 <div style={styles.chartCard}>
                     <h3 style={styles.chartTitle}>Resolver Ratings Distribution</h3>
                     {resolverRatings.length > 0 ? (
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={resolverRatings}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={100}
-                                    paddingAngle={2}
-                                    dataKey="count"
-                                    label={({ name, count }) => `${name}: ${count}`}
-                                    labelLine={false}
-                                >
-                                    {resolverRatings.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={['#ef4444', '#f59e0b', '#eab308', '#84cc16', '#22c55e'][index % 5]}
-                                        />
-                                    ))}
-                                </Pie>
-                                <Tooltip formatter={(value) => `${value} resolvers`} />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
+                        <div className="chart-resize" style={{ height: 300 }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={resolverRatings}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={isMobile ? 42 : 60}
+                                        outerRadius={isMobile ? 75 : 100}
+                                        paddingAngle={2}
+                                        dataKey="count"
+                                        label={isMobile ? false : ({ name, count }) => `${name}: ${count}`}
+                                        labelLine={false}
+                                    >
+                                        {resolverRatings.map((entry, index) => (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={['#ef4444', '#f59e0b', '#eab308', '#84cc16', '#22c55e'][index % 5]}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip formatter={(value) => `${value} resolvers`} />
+                                    <Legend
+                                        layout="horizontal"
+                                        verticalAlign="bottom"
+                                        align="center"
+                                        wrapperStyle={{ fontSize: isMobile ? 11 : 12 }}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
                     ) : (
                         <p style={{ textAlign: 'center', color: '#94a3b8' }}>No data available</p>
                     )}
@@ -213,7 +235,7 @@ const styles = {
     },
     chartsContainer: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: '24px'
     },
     chartCard: {

@@ -15,13 +15,14 @@ import {
     MessageCircle
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen = false, onClose }) => {
     const { user, logout } = useContext(AuthContext);
     const location = useLocation();
     const navigate = useNavigate();
 
     const handleLogout = () => {
         logout();
+        if (onClose) onClose();
         navigate('/');
     };
 
@@ -51,7 +52,10 @@ const Sidebar = () => {
     const currentLinks = menuConfig[user?.role] || [];
 
     return (
-        <div style={styles.sidebar}>
+        <div
+            className={`app-sidebar ${isOpen ? 'is-open' : ''}`}
+            style={styles.sidebar}
+        >
             <div style={styles.logoSection}>
                 <h2 style={styles.logoText}>Issue Tracker</h2>
             </div>
@@ -72,6 +76,7 @@ const Sidebar = () => {
                             backgroundColor: location.pathname === item.path ? '#334155' : 'transparent',
                             color: location.pathname === item.path ? '#60a5fa' : '#cbd5e1'
                         }}
+                        onClick={onClose}
                     >
                         {item.icon} 
                         <span style={{ marginLeft: '12px' }}>{item.name}</span>

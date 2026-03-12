@@ -9,6 +9,9 @@
 body {
   background-color: #f8fafc;
   color: #1e293b;
+  display: block;
+  place-items: initial;
+  min-height: 100vh;
 }
 
 /* Layout Helpers */
@@ -222,4 +225,161 @@ input:focus, select:focus, textarea:focus {
   font-weight: 700;
   color: #2563eb; /* Matches your brand blue */
   text-align: right;
+}
+
+/* --- Login Page Enhancement --- */
+.login-shell {
+  position: relative;
+  background: radial-gradient(circle at top, #e0f2fe 0%, #f8fafc 45%, #eef2ff 100%);
+}
+
+.login-shell::before,
+.login-shell::after {
+  content: "";
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  filter: blur(0);
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.login-shell::before {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 70%);
+  top: 5%;
+  left: 6%;
+}
+
+.login-shell::after {
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.28), transparent 70%);
+  bottom: 8%;
+  right: 10%;
+}
+
+.login-card,
+.login-form,
+.login-side {
+  position: relative;
+  z-index: 1;
+}
+
+.login-side {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.7));
+  backdrop-filter: blur(6px);
+}
+
+@media (max-width: 900px) {
+  .login-card {
+    flex-direction: column;
+  }
+}
+
+/* --- Global Responsiveness --- */
+@media (max-width: 1024px) {
+  th,
+  td {
+    font-size: 13px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 900px) {
+  .app-layout {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .app-sidebar {
+    position: fixed !important;
+    width: 260px !important;
+    height: 100vh !important;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 1001;
+  }
+
+  .app-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .app-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 20px !important;
+  }
+
+  .app-topbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .app-hamburger {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 16px -12px rgba(15, 23, 42, 0.6);
+  }
+
+  .app-hamburger span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #0f172a;
+    border-radius: 999px;
+  }
+
+  .app-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 1000;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  th,
+  td {
+    white-space: nowrap;
+  }
+
+  .chart-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .login-shell {
+    padding: 20px 12px;
+  }
+
+  .login-card {
+    border-radius: 14px;
+  }
+
+  .chart-resize {
+    height: 220px !important;
+  }
+
+  .recharts-legend-wrapper {
+    font-size: 11px;
+  }
+
+  .recharts-text {
+    font-size: 10px;
+  }
 }

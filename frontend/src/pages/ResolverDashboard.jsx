@@ -15,6 +15,7 @@ const ResolverDashboard = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         const fetchResolverStats = async () => {
@@ -36,6 +37,13 @@ const ResolverDashboard = () => {
 
         fetchResolverStats();
     }, [resolverId]);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 640);
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     if (loading) {
         return <div style={styles.page}>Loading...</div>;
@@ -137,27 +145,34 @@ const ResolverDashboard = () => {
                 <div style={styles.chartCard}>
                     <h3 style={styles.chartTitle}>Rating Distribution</h3>
                     <p style={styles.chartSubtitle}>Your feedback ratings</p>
-                    <div style={styles.chartContainer}>
+                    <div style={{
+                        ...styles.chartContainer,
+                        minHeight: isMobile ? '220px' : styles.chartContainer.minHeight
+                    }}>
                         {ratingDistributionData && ratingDistributionData.length > 0 ? (
                             <>
-                                <ResponsiveContainer width="100%" height={250}>
-                                    <PieChart>
-                                        <Pie
-                                            data={ratingDistributionData}
-                                            cx="50%"
-                                            cy="50%"
-                                            innerRadius={60}
-                                            outerRadius={100}
-                                            paddingAngle={2}
-                                            dataKey="count"
-                                        >
-                                            {ratingDistributionData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip formatter={(value) => `${value} ratings`} />
-                                    </PieChart>
-                                </ResponsiveContainer>
+                                <div className="chart-resize" style={{ height: isMobile ? 220 : 250, width: '100%' }}>
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
+                                            <Pie
+                                                data={ratingDistributionData}
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius={isMobile ? 44 : 60}
+                                                outerRadius={isMobile ? 72 : 100}
+                                                paddingAngle={isMobile ? 0 : 2}
+                                                dataKey="count"
+                                                label={false}
+                                                labelLine={false}
+                                            >
+                                                {ratingDistributionData.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip formatter={(value) => `${value} ratings`} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
                                 <div style={styles.legendContainer}>
                                     {ratingDistributionData.map((item, index) => (
                                         <div key={index} style={styles.legendItem}>
@@ -245,7 +260,7 @@ const styles = {
     },
     chartsGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: '16px'
     },
     chartCard: {
