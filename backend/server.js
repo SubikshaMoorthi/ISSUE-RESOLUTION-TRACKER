@@ -6,7 +6,12 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 const app = express();
 
-app.use(cors());
+// Replace app.use(cors()); with this:
+app.use(cors({
+  origin: 'https://online-issue-resolution-tracker-1.onrender.com', // Your frontend URL
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/authRoutes'));
